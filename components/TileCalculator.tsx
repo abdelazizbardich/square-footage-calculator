@@ -9,7 +9,8 @@ import {
   tilesNeeded,
   type LengthUnit,
 } from "@/lib/area";
-import { NumberField, parseNum } from "./NumberField";
+import { NumberField, SelectField, parseNum } from "./NumberField";
+import { ResultPanel, type Stat } from "./ResultPanel";
 
 export function TileCalculator() {
   const [unit, setUnit] = useState<LengthUnit>("ft");
@@ -21,73 +22,73 @@ export function TileCalculator() {
   const [perBox, setPerBox] = useState("");
   const [pricePerTile, setPricePerTile] = useState("");
 
-  const area = shapeAreaSqFt("rectangle", { length: parseNum(length), width: parseNum(width) }, unit);
+  const area = shapeAreaSqFt(
+    "rectangle",
+    { length: parseNum(length), width: parseNum(width) },
+    unit,
+  );
   const tiles = tilesNeeded(area, parseNum(tileW), parseNum(tileL), parseNum(waste));
   const tilesPerBox = parseNum(perBox);
   const boxes = tilesPerBox > 0 ? Math.ceil(tiles / tilesPerBox) : 0;
   const price = parseNum(pricePerTile);
 
+  const stats: Stat[] = [
+    { label: "Surface area", value: `${formatNumber(area)} sq ft` },
+    {
+      label: "Tile size",
+      value: `${formatNumber(parseNum(tileW))}″ × ${formatNumber(parseNum(tileL))}″`,
+    },
+  ];
+  if (boxes > 0) stats.push({ label: "Boxes", value: String(boxes) });
+  if (price > 0) {
+    stats.push({ label: "Estimated cost", value: formatCurrency(tiles * price), highlight: true });
+  }
+
   return (
-    <div className="card calc">
-      <div className="fields">
-        <label>
-          Unit
-          <select value={unit} onChange={(e) => setUnit(e.target.value as LengthUnit)}>
-            {(Object.keys(LENGTH_LABELS) as LengthUnit[]).map((u) => (
-              <option key={u} value={u}>
-                {LENGTH_LABELS[u]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <NumberField label={`Surface length (${unit})`} value={length} onChange={setLength} />
-        <NumberField label={`Surface width (${unit})`} value={width} onChange={setWidth} />
-      </div>
-      <div className="fields">
-        <NumberField label="Tile width (in)" value={tileW} onChange={setTileW} />
-        <NumberField label="Tile length (in)" value={tileL} onChange={setTileL} />
-        <NumberField label="Waste (%)" value={waste} onChange={setWaste} step="1" />
-        <NumberField
-          label="Tiles per box (optional)"
-          value={perBox}
-          onChange={setPerBox}
-          step="1"
-          placeholder="e.g. 10"
-        />
-        <NumberField
-          label="Price per tile ($, optional)"
-          value={pricePerTile}
-          onChange={setPricePerTile}
-          placeholder="e.g. 1.25"
-        />
-      </div>
-      <div className="results" aria-live="polite">
-        <p className="results-main">{formatNumber(tiles, 0)} tiles</p>
-        <div className="results-grid">
-          <div>
-            <span>Surface area</span>
-            <strong>{formatNumber(area)} sq ft</strong>
+    <div className="calc-layout">
+      <div className="calc-inputs">
+        <fieldset className="fieldset">
+          <legend className="fieldset-title">Surface size</legend>
+          <div className="fields">
+            <NumberField label="Length" suffix={unit} value={length} onChange={setLength} />
+            <NumberField label="Width" suffix={unit} value={width} onChange={setWidth} />
+            <SelectField label="Unit" value={unit} onChange={setUnit} options={LENGTH_LABELS} />
           </div>
-          <div>
-            <span>Tile size</span>
-            <strong>
-              {formatNumber(parseNum(tileW))}″ × {formatNumber(parseNum(tileL))}″
-            </strong>
+        </fieldset>
+        <fieldset className="fieldset">
+          <legend className="fieldset-title">Tile</legend>
+          <div className="fields">
+            <NumberField label="Tile width" suffix="in" value={tileW} onChange={setTileW} />
+            <NumberField label="Tile length" suffix="in" value={tileL} onChange={setTileL} />
+            <NumberField label="Waste" suffix="%" value={waste} onChange={setWaste} step="1" />
           </div>
-          {boxes > 0 && (
-            <div>
-              <span>Boxes</span>
-              <strong>{boxes}</strong>
-            </div>
-          )}
-          {price > 0 && (
-            <div>
-              <span>Estimated cost</span>
-              <strong>{formatCurrency(tiles * price)}</strong>
-            </div>
-          )}
-        </div>
+        </fieldset>
+        <fieldset className="fieldset">
+          <legend className="fieldset-title">Boxes &amp; cost (optional)</legend>
+          <div className="fields">
+            <NumberField
+              label="Tiles per box"
+              value={perBox}
+              onChange={setPerBox}
+              step="1"
+              placeholder="10"
+            />
+            <NumberField
+              label="Price per tile"
+              suffix="$"
+              value={pricePerTile}
+              onChange={setPricePerTile}
+              placeholder="1.25"
+            />
+          </div>
+        </fieldset>
       </div>
+      <ResultPanel
+        label={`Tiles needed (incl. ${formatNumber(parseNum(waste))}% waste)`}
+        value={formatNumber(tiles, 0)}
+        unit={tiles === 1 ? "tile" : "tiles"}
+        stats={stats}
+      />
     </div>
   );
 }

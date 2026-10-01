@@ -10,7 +10,8 @@ import {
   withWaste,
   type LengthUnit,
 } from "@/lib/area";
-import { NumberField, parseNum } from "./NumberField";
+import { NumberField, SelectField, parseNum } from "./NumberField";
+import { ResultPanel, type Stat } from "./ResultPanel";
 
 export function FlooringCalculator() {
   const [unit, setUnit] = useState<LengthUnit>("ft");
@@ -20,62 +21,70 @@ export function FlooringCalculator() {
   const [waste, setWaste] = useState("10");
   const [price, setPrice] = useState("");
 
-  const area = shapeAreaSqFt("rectangle", { length: parseNum(length), width: parseNum(width) }, unit);
+  const area = shapeAreaSqFt(
+    "rectangle",
+    { length: parseNum(length), width: parseNum(width) },
+    unit,
+  );
   const wastePct = parseNum(waste);
-  const needed = withWaste(area, wastePct);
   const boxes = boxesNeeded(area, parseNum(perBox), wastePct);
   const purchased = boxes * parseNum(perBox);
   const pricePerSqFt = parseNum(price);
 
+  const stats: Stat[] = [
+    { label: "Room area", value: `${formatNumber(area)} sq ft` },
+    {
+      label: `Needed with ${formatNumber(wastePct)}% waste`,
+      value: `${formatNumber(withWaste(area, wastePct))} sq ft`,
+    },
+    { label: "Flooring purchased", value: `${formatNumber(purchased)} sq ft` },
+  ];
+  if (pricePerSqFt > 0) {
+    stats.push({
+      label: "Estimated cost",
+      value: formatCurrency(purchased * pricePerSqFt),
+      highlight: true,
+    });
+  }
+
   return (
-    <div className="card calc">
-      <div className="fields">
-        <label>
-          Unit
-          <select value={unit} onChange={(e) => setUnit(e.target.value as LengthUnit)}>
-            {(Object.keys(LENGTH_LABELS) as LengthUnit[]).map((u) => (
-              <option key={u} value={u}>
-                {LENGTH_LABELS[u]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <NumberField label={`Room length (${unit})`} value={length} onChange={setLength} />
-        <NumberField label={`Room width (${unit})`} value={width} onChange={setWidth} />
-      </div>
-      <div className="fields">
-        <NumberField label="Sq ft per box" value={perBox} onChange={setPerBox} />
-        <NumberField label="Waste (%)" value={waste} onChange={setWaste} step="1" />
-        <NumberField
-          label="Price per sq ft ($, optional)"
-          value={price}
-          onChange={setPrice}
-          placeholder="e.g. 2.99"
-        />
-      </div>
-      <div className="results" aria-live="polite">
-        <p className="results-main">{boxes} boxes</p>
-        <div className="results-grid">
-          <div>
-            <span>Room area</span>
-            <strong>{formatNumber(area)} sq ft</strong>
+    <div className="calc-layout">
+      <div className="calc-inputs">
+        <fieldset className="fieldset">
+          <legend className="fieldset-title">Room size</legend>
+          <div className="fields">
+            <NumberField label="Length" suffix={unit} value={length} onChange={setLength} />
+            <NumberField label="Width" suffix={unit} value={width} onChange={setWidth} />
+            <SelectField label="Unit" value={unit} onChange={setUnit} options={LENGTH_LABELS} />
           </div>
-          <div>
-            <span>Needed with waste</span>
-            <strong>{formatNumber(needed)} sq ft</strong>
+        </fieldset>
+        <fieldset className="fieldset">
+          <legend className="fieldset-title">Flooring</legend>
+          <div className="fields">
+            <NumberField
+              label="Coverage per box"
+              suffix="ft²"
+              value={perBox}
+              onChange={setPerBox}
+            />
+            <NumberField label="Waste" suffix="%" value={waste} onChange={setWaste} step="1" />
+            <NumberField
+              label="Price per sq ft"
+              suffix="$"
+              value={price}
+              onChange={setPrice}
+              placeholder="2.99"
+            />
           </div>
-          <div>
-            <span>Flooring purchased</span>
-            <strong>{formatNumber(purchased)} sq ft</strong>
-          </div>
-          {pricePerSqFt > 0 && (
-            <div>
-              <span>Estimated cost</span>
-              <strong>{formatCurrency(purchased * pricePerSqFt)}</strong>
-            </div>
-          )}
-        </div>
+        </fieldset>
       </div>
+      <ResultPanel
+        label="Boxes to buy"
+        value={String(boxes)}
+        unit={boxes === 1 ? "box" : "boxes"}
+        stats={stats}
+        note="Keep one spare box for future repairs."
+      />
     </div>
   );
 }

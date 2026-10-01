@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Faq, type FaqItem } from "@/components/Faq";
+import { PageHero } from "@/components/PageHero";
 import { RelatedTools } from "@/components/RelatedTools";
 import { SquareFootageCalculator } from "@/components/SquareFootageCalculator";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
@@ -53,133 +54,153 @@ const webAppJsonLd = {
 export default function Home() {
   return (
     <>
-      <h1>Square Footage Calculator</h1>
-      <p className="lead">
-        Enter your room dimensions in feet, inches, yards or meters. Add as many areas as you need —
-        the total updates instantly with square meters, square yards, acres and an optional cost
-        estimate.
-      </p>
+      <PageHero
+        eyebrow="Free area calculator"
+        title="Square Footage Calculator"
+        lead="Enter room dimensions in feet, inches, yards or meters. Add as many areas as you need — the total updates instantly with square meters, square yards, acres and an optional cost estimate."
+      />
 
-      <SquareFootageCalculator />
-
-      <h2>Square footage formulas by shape</h2>
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Shape</th>
-              <th>Formula</th>
-              <th>Example</th>
-              <th>Result</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Rectangle / square</td>
-              <td>Length × Width</td>
-              <td>12 ft × 10 ft</td>
-              <td>120 sq ft</td>
-            </tr>
-            <tr>
-              <td>Circle</td>
-              <td>π × (Diameter ÷ 2)²</td>
-              <td>10 ft diameter</td>
-              <td>78.54 sq ft</td>
-            </tr>
-            <tr>
-              <td>Triangle</td>
-              <td>(Base × Height) ÷ 2</td>
-              <td>10 ft × 6 ft</td>
-              <td>30 sq ft</td>
-            </tr>
-            <tr>
-              <td>Trapezoid</td>
-              <td>((Side A + Side B) ÷ 2) × Height</td>
-              <td>(8 + 12) ÷ 2 × 5 ft</td>
-              <td>50 sq ft</td>
-            </tr>
-            <tr>
-              <td>L-shape</td>
-              <td>(L₁ × W₁) + (L₂ × W₂)</td>
-              <td>(10 × 10) + (5 × 4)</td>
-              <td>120 sq ft</td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="container tool-shell">
+        <SquareFootageCalculator />
       </div>
 
-      <h2>How to measure a room for square footage</h2>
-      <h3>1. Sketch the floor plan</h3>
-      <p>
-        Draw a rough outline and split any irregular space into rectangles, triangles or circles.
-        Each piece becomes one row in the calculator.
-      </p>
-      <h3>2. Measure wall to wall</h3>
-      <p>
-        Use a tape measure or laser measure along the floor, from the base of one wall to the
-        opposite wall. Round to the nearest inch. Measure in the same unit for every piece.
-      </p>
-      <h3>3. Add the pieces and include waste</h3>
-      <p>
-        The calculator sums every area. Add 5–10% waste for flooring, tile or sod so you do not
-        run short on cuts. For a step-by-step walkthrough, read{" "}
-        <Link href="/how-to-calculate-square-footage">how to calculate square footage</Link>.
-      </p>
+      <div className="container content">
+        <section>
+          <h2>Square footage formulas by shape</h2>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Shape</th>
+                  <th>Formula</th>
+                  <th>Example</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rectangle / square</td>
+                  <td>Length × Width</td>
+                  <td>12 ft × 10 ft</td>
+                  <td>120 sq ft</td>
+                </tr>
+                <tr>
+                  <td>Circle</td>
+                  <td>π × (Diameter ÷ 2)²</td>
+                  <td>10 ft diameter</td>
+                  <td>78.54 sq ft</td>
+                </tr>
+                <tr>
+                  <td>Triangle</td>
+                  <td>(Base × Height) ÷ 2</td>
+                  <td>10 ft × 6 ft</td>
+                  <td>30 sq ft</td>
+                </tr>
+                <tr>
+                  <td>Trapezoid</td>
+                  <td>((Side A + Side B) ÷ 2) × Height</td>
+                  <td>(8 + 12) ÷ 2 × 5 ft</td>
+                  <td>50 sq ft</td>
+                </tr>
+                <tr>
+                  <td>L-shape</td>
+                  <td>(L₁ × W₁) + (L₂ × W₂)</td>
+                  <td>(10 × 10) + (5 × 4)</td>
+                  <td>120 sq ft</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      <h2>Common room sizes in square feet</h2>
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Room</th>
-              <th>Typical dimensions</th>
-              <th>Square feet</th>
-              <th>Square meters</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Small bedroom</td>
-              <td>10 × 10 ft</td>
-              <td>100</td>
-              <td>9.29</td>
-            </tr>
-            <tr>
-              <td>Primary bedroom</td>
-              <td>14 × 16 ft</td>
-              <td>224</td>
-              <td>20.81</td>
-            </tr>
-            <tr>
-              <td>Living room</td>
-              <td>16 × 20 ft</td>
-              <td>320</td>
-              <td>29.73</td>
-            </tr>
-            <tr>
-              <td>Kitchen</td>
-              <td>10 × 15 ft</td>
-              <td>150</td>
-              <td>13.94</td>
-            </tr>
-            <tr>
-              <td>Bathroom</td>
-              <td>5 × 8 ft</td>
-              <td>40</td>
-              <td>3.72</td>
-            </tr>
-            <tr>
-              <td>Two-car garage</td>
-              <td>20 × 20 ft</td>
-              <td>400</td>
-              <td>37.16</td>
-            </tr>
-          </tbody>
-        </table>
+        <section>
+          <h2>How to measure a room for square footage</h2>
+          <ol className="steps">
+            <li>
+              <h3>Sketch the floor plan</h3>
+              <p>
+                Draw a rough outline and split any irregular space into rectangles, triangles or
+                circles. Each piece becomes one area in the calculator.
+              </p>
+            </li>
+            <li>
+              <h3>Measure wall to wall</h3>
+              <p>
+                Measure along the floor from the base of one wall to the opposite wall. Round to the
+                nearest inch and use the same unit for every piece.
+              </p>
+            </li>
+            <li>
+              <h3>Add the pieces and waste</h3>
+              <p>
+                The calculator sums every area. Add 5–10% waste for flooring, tile or sod so you
+                don&apos;t run short on cuts.
+              </p>
+            </li>
+          </ol>
+          <p className="lead" style={{ marginTop: "var(--space-6)" }}>
+            Need worked examples? Read{" "}
+            <Link href="/how-to-calculate-square-footage">how to calculate square footage</Link>.
+          </p>
+        </section>
+
+        <section>
+          <h2>Common room sizes in square feet</h2>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Room</th>
+                  <th>Typical dimensions</th>
+                  <th>Square feet</th>
+                  <th>Square meters</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Small bedroom</td>
+                  <td>10 × 10 ft</td>
+                  <td>100</td>
+                  <td>9.29</td>
+                </tr>
+                <tr>
+                  <td>Primary bedroom</td>
+                  <td>14 × 16 ft</td>
+                  <td>224</td>
+                  <td>20.81</td>
+                </tr>
+                <tr>
+                  <td>Living room</td>
+                  <td>16 × 20 ft</td>
+                  <td>320</td>
+                  <td>29.73</td>
+                </tr>
+                <tr>
+                  <td>Kitchen</td>
+                  <td>10 × 15 ft</td>
+                  <td>150</td>
+                  <td>13.94</td>
+                </tr>
+                <tr>
+                  <td>Bathroom</td>
+                  <td>5 × 8 ft</td>
+                  <td>40</td>
+                  <td>3.72</td>
+                </tr>
+                <tr>
+                  <td>Two-car garage</td>
+                  <td>20 × 20 ft</td>
+                  <td>400</td>
+                  <td>37.16</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <Faq items={faq} />
+        <RelatedTools exclude="/" />
       </div>
-
-      <Faq items={faq} />
-      <RelatedTools exclude="/" />
 
       <script
         type="application/ld+json"

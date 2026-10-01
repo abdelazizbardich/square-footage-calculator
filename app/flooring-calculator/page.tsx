@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Faq, type FaqItem } from "@/components/Faq";
 import { FlooringCalculator } from "@/components/FlooringCalculator";
+import { PageHero } from "@/components/PageHero";
 import { RelatedTools } from "@/components/RelatedTools";
 
 export const metadata: Metadata = {
@@ -33,75 +34,83 @@ const faq: FaqItem[] = [
 export default function FlooringPage() {
   return (
     <>
-      <h1>Flooring Calculator</h1>
-      <p className="lead">
-        Enter the room size and the square feet per box from the carton. You get the boxes to buy,
-        the total square footage purchased, and the cost.
-      </p>
+      <PageHero
+        eyebrow="Laminate · Vinyl · Hardwood"
+        title="Flooring Calculator"
+        lead="Enter the room size and the coverage per box from the carton. You get the boxes to buy, the total square footage purchased, and the cost."
+      />
 
-      <FlooringCalculator />
-
-      <h2>Recommended waste by flooring type</h2>
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Flooring</th>
-              <th>Typical sq ft per box</th>
-              <th>Straight lay waste</th>
-              <th>Diagonal / pattern waste</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Laminate</td>
-              <td>18–25</td>
-              <td>10%</td>
-              <td>15%</td>
-            </tr>
-            <tr>
-              <td>Luxury vinyl plank</td>
-              <td>20–30</td>
-              <td>10%</td>
-              <td>15%</td>
-            </tr>
-            <tr>
-              <td>Solid hardwood</td>
-              <td>18–24</td>
-              <td>10%</td>
-              <td>15–20%</td>
-            </tr>
-            <tr>
-              <td>Engineered wood</td>
-              <td>20–30</td>
-              <td>8–10%</td>
-              <td>15%</td>
-            </tr>
-            <tr>
-              <td>Carpet tiles</td>
-              <td>20–50</td>
-              <td>5%</td>
-              <td>10%</td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="container tool-shell">
+        <FlooringCalculator />
       </div>
 
-      <h2>How to estimate flooring for multiple rooms</h2>
-      <h3>Measure each room separately</h3>
-      <p>
-        Get length × width for every room, then add them. Use the{" "}
-        <Link href="/">square footage calculator</Link> to total several rooms or L-shaped spaces, and
-        enter the total here as one room (for example, length = total, width = 1).
-      </p>
-      <h3>Check the flooring direction</h3>
-      <p>
-        Planks running continuously through doorways reduce transition strips but increase cuts.
-        Lean toward the higher waste figure when rooms connect.
-      </p>
+      <div className="container content">
+        <section>
+          <h2>Recommended waste by flooring type</h2>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Flooring</th>
+                  <th>Typical sq ft per box</th>
+                  <th>Straight lay waste</th>
+                  <th>Diagonal / pattern waste</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Laminate</td>
+                  <td>18–25</td>
+                  <td>10%</td>
+                  <td>15%</td>
+                </tr>
+                <tr>
+                  <td>Luxury vinyl plank</td>
+                  <td>20–30</td>
+                  <td>10%</td>
+                  <td>15%</td>
+                </tr>
+                <tr>
+                  <td>Solid hardwood</td>
+                  <td>18–24</td>
+                  <td>10%</td>
+                  <td>15–20%</td>
+                </tr>
+                <tr>
+                  <td>Engineered wood</td>
+                  <td>20–30</td>
+                  <td>8–10%</td>
+                  <td>15%</td>
+                </tr>
+                <tr>
+                  <td>Carpet tiles</td>
+                  <td>20–50</td>
+                  <td>5%</td>
+                  <td>10%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      <Faq items={faq} />
-      <RelatedTools exclude="/flooring-calculator" />
+        <section className="prose">
+          <h2>How to estimate flooring for multiple rooms</h2>
+          <h3>Measure each room separately</h3>
+          <p>
+            Get length × width for every room, then add them. Use the{" "}
+            <Link href="/">square footage calculator</Link> to total several rooms or L-shaped
+            spaces, and enter the total here as one room (for example, length = total, width = 1).
+          </p>
+          <h3>Check the flooring direction</h3>
+          <p>
+            Planks running continuously through doorways reduce transition strips but increase cuts.
+            Lean toward the higher waste figure when rooms connect.
+          </p>
+        </section>
+
+        <Faq items={faq} />
+        <RelatedTools exclude="/flooring-calculator" />
+      </div>
     </>
   );
 }

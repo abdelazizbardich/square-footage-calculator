@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Faq, type FaqItem } from "@/components/Faq";
+import { PageHero } from "@/components/PageHero";
 import { RelatedTools } from "@/components/RelatedTools";
 import { TileCalculator } from "@/components/TileCalculator";
 
@@ -31,8 +32,8 @@ const faq: FaqItem[] = [
 ];
 
 const sizes = [
-  { size: "4″ × 4″", sqft: 4 * 4 / 144 },
-  { size: "6″ × 6″", sqft: 6 * 6 / 144 },
+  { size: "4″ × 4″", sqft: (4 * 4) / 144 },
+  { size: "6″ × 6″", sqft: (6 * 6) / 144 },
   { size: "12″ × 12″", sqft: 1 },
   { size: "12″ × 24″", sqft: 2 },
   { size: "18″ × 18″", sqft: 2.25 },
@@ -43,53 +44,61 @@ const sizes = [
 export default function TilePage() {
   return (
     <>
-      <h1>Tile Calculator</h1>
-      <p className="lead">
-        Enter the floor or wall size and your tile dimensions. The calculator returns how many tiles
-        to buy with waste included, plus boxes and cost if you add them.
-      </p>
+      <PageHero
+        eyebrow="Floors · Walls · Backsplashes"
+        title="Tile Calculator"
+        lead="Enter the floor or wall size and your tile dimensions. The calculator returns how many tiles to buy with waste included, plus boxes and cost if you add them."
+      />
 
-      <TileCalculator />
-
-      <h2>Tiles needed per 100 sq ft by tile size</h2>
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Tile size</th>
-              <th>Sq ft per tile</th>
-              <th>Tiles per 100 sq ft (no waste)</th>
-              <th>With 10% waste</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sizes.map((s) => (
-              <tr key={s.size}>
-                <td>{s.size}</td>
-                <td>{s.sqft.toFixed(3)}</td>
-                <td>{Math.ceil(100 / s.sqft - 1e-9)}</td>
-                <td>{Math.ceil(110 / s.sqft - 1e-9)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="container tool-shell">
+        <TileCalculator />
       </div>
 
-      <h2>Tile layout tips that affect quantity</h2>
-      <h3>Floors</h3>
-      <p>
-        Measure wall to wall and ignore baseboards. Exclude permanent fixtures like kitchen islands
-        and tubs.
-      </p>
-      <h3>Walls and backsplashes</h3>
-      <p>
-        Measure the height and width of each wall section and subtract windows and doors larger
-        than about 4 sq ft. Use the <Link href="/">square footage calculator</Link> to add several wall
-        sections together.
-      </p>
+      <div className="container content">
+        <section>
+          <h2>Tiles needed per 100 sq ft by tile size</h2>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tile size</th>
+                  <th>Sq ft per tile</th>
+                  <th>Tiles per 100 sq ft (no waste)</th>
+                  <th>With 10% waste</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sizes.map((s) => (
+                  <tr key={s.size}>
+                    <td>{s.size}</td>
+                    <td>{s.sqft.toFixed(3)}</td>
+                    <td>{Math.ceil(100 / s.sqft - 1e-9)}</td>
+                    <td>{Math.ceil(110 / s.sqft - 1e-9)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-      <Faq items={faq} />
-      <RelatedTools exclude="/tile-calculator" />
+        <section className="prose">
+          <h2>Tile layout tips that affect quantity</h2>
+          <h3>Floors</h3>
+          <p>
+            Measure wall to wall and ignore baseboards. Exclude permanent fixtures like kitchen
+            islands and tubs.
+          </p>
+          <h3>Walls and backsplashes</h3>
+          <p>
+            Measure the height and width of each wall section and subtract windows and doors larger
+            than about 4 sq ft. Use the <Link href="/">square footage calculator</Link> to add
+            several wall sections together.
+          </p>
+        </section>
+
+        <Faq items={faq} />
+        <RelatedTools exclude="/tile-calculator" />
+      </div>
     </>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AreaConverter } from "@/components/AreaConverter";
 import { Faq, type FaqItem } from "@/components/Faq";
+import { PageHero } from "@/components/PageHero";
 import { RelatedTools } from "@/components/RelatedTools";
 
 export const metadata: Metadata = {
@@ -34,42 +35,53 @@ const rows = [10, 50, 100, 200, 500, 1000, 1500, 2000, 2500, 5000];
 export default function ConverterPage() {
   return (
     <>
-      <h1>Square Feet to Square Meters Converter</h1>
-      <p className="lead">
-        Type an area and pick the unit. All other units update instantly: square feet, square
-        meters, square yards, square inches and acres.
-      </p>
+      <PageHero
+        eyebrow="Area unit converter"
+        title="Square Feet to Square Meters Converter"
+        lead="Type an area and pick the unit. All other units update instantly: square feet, square meters, square yards, square inches and acres."
+        badges={["1 sq ft = 0.0929 m²", "1 m² = 10.764 sq ft", "5 units"]}
+      />
 
-      <AreaConverter />
-
-      <h2>Conversion formulas</h2>
-      <p className="formula">m² = sq ft × 0.092903</p>
-      <p className="formula">sq ft = m² × 10.7639</p>
-
-      <h2>Square feet to square meters table</h2>
-      <div className="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Square feet</th>
-              <th>Square meters</th>
-              <th>Square yards</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((ft) => (
-              <tr key={ft}>
-                <td>{ft.toLocaleString("en-US")} sq ft</td>
-                <td>{(ft * 0.09290304).toLocaleString("en-US", { maximumFractionDigits: 2 })} m²</td>
-                <td>{(ft / 9).toLocaleString("en-US", { maximumFractionDigits: 2 })} yd²</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="container tool-shell">
+        <AreaConverter />
       </div>
 
-      <Faq items={faq} />
-      <RelatedTools exclude="/square-feet-to-square-meters" />
+      <div className="container content">
+        <section className="prose">
+          <h2>Conversion formulas</h2>
+          <p className="formula">m² = sq ft × 0.092903</p>
+          <p className="formula">sq ft = m² × 10.7639</p>
+        </section>
+
+        <section>
+          <h2>Square feet to square meters table</h2>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Square feet</th>
+                  <th>Square meters</th>
+                  <th>Square yards</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((ft) => (
+                  <tr key={ft}>
+                    <td>{ft.toLocaleString("en-US")} sq ft</td>
+                    <td>
+                      {(ft * 0.09290304).toLocaleString("en-US", { maximumFractionDigits: 2 })} m²
+                    </td>
+                    <td>{(ft / 9).toLocaleString("en-US", { maximumFractionDigits: 2 })} yd²</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <Faq items={faq} />
+        <RelatedTools exclude="/square-feet-to-square-meters" />
+      </div>
     </>
   );
 }

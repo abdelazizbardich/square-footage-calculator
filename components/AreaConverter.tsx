@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { AREA_LABELS, convertArea, formatNumber, type AreaUnit } from "@/lib/area";
-import { NumberField, parseNum } from "./NumberField";
+import { NumberField, SelectField, parseNum } from "./NumberField";
+import { ResultPanel } from "./ResultPanel";
 
 const UNITS = Object.keys(AREA_LABELS) as AreaUnit[];
 
@@ -10,36 +11,33 @@ export function AreaConverter() {
   const [value, setValue] = useState("100");
   const [from, setFrom] = useState<AreaUnit>("sqft");
   const amount = parseNum(value);
+  const primary: AreaUnit = from === "sqm" ? "sqft" : "sqm";
 
   return (
-    <div className="card calc">
-      <div className="fields">
-        <NumberField label="Area" value={value} onChange={setValue} />
-        <label>
-          From
-          <select value={from} onChange={(e) => setFrom(e.target.value as AreaUnit)}>
-            {UNITS.map((u) => (
-              <option key={u} value={u}>
-                {AREA_LABELS[u]}
-              </option>
-            ))}
-          </select>
-        </label>
+    <div className="calc-layout">
+      <div className="calc-inputs">
+        <fieldset className="fieldset">
+          <legend className="fieldset-title">Convert</legend>
+          <div className="fields">
+            <NumberField
+              label="Area"
+              suffix={AREA_LABELS[from]}
+              value={value}
+              onChange={setValue}
+            />
+            <SelectField label="From unit" value={from} onChange={setFrom} options={AREA_LABELS} />
+          </div>
+        </fieldset>
       </div>
-      <div className="results" aria-live="polite">
-        <p className="results-main">
-          {formatNumber(convertArea(amount, from, from === "sqm" ? "sqft" : "sqm"), 4)}{" "}
-          {from === "sqm" ? "sq ft" : "sq m"}
-        </p>
-        <div className="results-grid">
-          {UNITS.filter((u) => u !== from).map((u) => (
-            <div key={u}>
-              <span>{AREA_LABELS[u]}</span>
-              <strong>{formatNumber(convertArea(amount, from, u), u === "acre" ? 6 : 4)}</strong>
-            </div>
-          ))}
-        </div>
-      </div>
+      <ResultPanel
+        label={`${formatNumber(amount, 4)} ${AREA_LABELS[from]} equals`}
+        value={formatNumber(convertArea(amount, from, primary), 4)}
+        unit={AREA_LABELS[primary]}
+        stats={UNITS.filter((u) => u !== from && u !== primary).map((u) => ({
+          label: AREA_LABELS[u],
+          value: formatNumber(convertArea(amount, from, u), u === "acre" ? 6 : 4),
+        }))}
+      />
     </div>
   );
 }

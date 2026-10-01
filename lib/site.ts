@@ -11,6 +11,6 @@ export const NAV = [
   { href: "/", label: "Square Footage" },
   { href: "/flooring-calculator", label: "Flooring" },
   { href: "/tile-calculator", label: "Tile" },
-  { href: "/square-feet-to-square-meters", label: "Sq Ft ↔ Sq M" },
+  { href: "/square-feet-to-square-meters", label: "Sq Ft to Sq M" },
   { href: "/how-to-calculate-square-footage", label: "How-To Guide" },
 ] as const;
